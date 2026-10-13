@@ -87,6 +87,14 @@ VTX analógico Meteor75 ── 5.8 GHz (R3: 5732 MHz) ──> Antena RHCP
 | En una prueba, la calidad del enlace ELRS disminuyó y la del enlace TBS evaluado no mostró una reducción comparable | Resultado específico de esas condiciones; no demuestra superioridad ni inmunidad universal |
 | Se recibió vídeo analógico mediante un flujo SDR | Recepción y demodulación analógica, **no** ruptura de cifrado digital |
 
+## 🎥 Charla completa — Pwn Or Die 2026
+
+La organización de **Pwn Or Die** publicó en YouTube la grabación de mi charla **BEYOND THE GOGGLES — The drone is more than what we see through the goggles**, presentada en Quito, Ecuador.
+
+[![Ver la charla Beyond the Goggles en YouTube](https://img.youtube.com/vi/r7mYXfIT-SY/hqdefault.jpg)](https://youtu.be/r7mYXfIT-SY)
+
+▶️ **[Ver la charla completa en YouTube](https://youtu.be/r7mYXfIT-SY)**
+
 ## Presentación
 
 **BEYOND THE GOGGLES — Pwn Or Die 2026, Quito**
