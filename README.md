@@ -1,103 +1,105 @@
+🌐 **Idioma / Language:** **Español** | [English](README_EN.md)
+
 # BEYOND THE GOGGLES
 
-### Hacking FPV Drones Through the RF Spectrum
+### Hacking de drones FPV a través del espectro de radiofrecuencia
 
-> The drone is more than what we see through the goggles.
+> El dron es mucho más de lo que vemos a través de las gafas.
 
 **R4Gh0st // Matheo Camacho Vargas**  
-Cybersecurity Engineering Student · RF/SDR Research · FPV Pilot  
+Estudiante de Ingeniería en Ciberseguridad · Investigación RF/SDR · Piloto FPV  
 **Pwn Or Die 2026 — Quito, Ecuador**
 
 ---
 
-## About this research
+## Acerca de la investigación
 
-What can we learn about an FPV drone by observing its radio signals?
+¿Qué podemos aprender sobre un dron FPV observando sus señales de radio?
 
-**Beyond the Goggles** documents hands-on experiments with two independent FPV communication surfaces: the **2.4 GHz ExpressLRS radio-control link** and the **5.8 GHz analog video transmitter (VTX)**. The work focuses on RF observation, IQ capture, signal characterization and analog video reception. It also discusses controlled comparisons between RF equipment and links.
+**Beyond the Goggles** documenta experimentos prácticos sobre dos superficies de comunicación independientes: el **enlace de radiocontrol ExpressLRS de 2.4 GHz** y el **transmisor de vídeo analógico (VTX) de 5.8 GHz**. Se estudian la observación RF, las capturas IQ, la caracterización de señales y la recepción de vídeo analógico, además de comparaciones experimentales entre equipos y enlaces.
 
-This is an experimental research log, not a claim of universal exploitability or protocol compromise.
+Este repositorio es una bitácora de investigación; no pretende demostrar vulnerabilidades universales ni compromisos de protocolos.
 
-![Equipment used in the experiments](01-radiocontrol-elrs/images/materiales.jpeg)
+![Equipos utilizados en los experimentos](01-radiocontrol-elrs/images/materiales.jpeg)
 
-## Experiments
+## Experimentos
 
-### 01 — ExpressLRS / Radio Control (2.4 GHz)
+### 01 — ExpressLRS / Radiocontrol (2.4 GHz)
 
-- Observation of RF activity with transmitter ON and OFF
-- HackRF One IQ capture and offline inspection with Inspectrum
-- Measured periodicity of approximately **3.968 ms (252 Hz)**, consistent with a configured **250 Hz** link
-- Frequency-hopping behavior and limits of identifying a protocol from RF activity alone
-- NRF24L01 and HackRF/PortaPack experiments; observations of link quality under specific test conditions
+- Comparación de la actividad RF con el transmisor encendido y apagado.
+- Capturas IQ con HackRF One y análisis posterior en Inspectrum.
+- Periodicidad medida de aproximadamente **3.968 ms (252 Hz)**, coherente con un enlace configurado a **250 Hz**.
+- Comportamiento de salto de frecuencia y limitaciones de identificar protocolos únicamente por su actividad RF.
+- Experimentos con NRF24L01 y HackRF/PortaPack; observaciones sobre la calidad del enlace bajo condiciones concretas.
 
-![2.4 GHz experimental evidence](01-radiocontrol-elrs/images/2.4ghz-poc.jpeg)
+![Evidencia experimental de 2.4 GHz](01-radiocontrol-elrs/images/2.4ghz-poc.jpeg)
 
-**[Read the ExpressLRS experiment →](01-radiocontrol-elrs/README.md)**
+**[Consultar la investigación de ExpressLRS →](01-radiocontrol-elrs/README.md)**
 
-### 02 — Analog FPV Video / VTX (5.8 GHz)
+### 02 — Vídeo FPV analógico / VTX (5.8 GHz)
 
-- RF observation of an analog FPV video transmitter
-- Experimental channel **Raceband R3 — 5732 MHz**
-- Reception with HackRF One and a 5.8 GHz RHCP antenna
-- Video demodulation workflow using SDRangel's ATV demodulator
-- Security implications of an analog, unencrypted video link
+- Observación RF de un transmisor de vídeo analógico.
+- Canal experimental **Raceband R3 — 5732 MHz**.
+- Recepción con HackRF One y antena RHCP de 5.8 GHz.
+- Demodulación de vídeo mediante el módulo ATV de SDRangel.
+- Consideraciones de seguridad de un enlace de vídeo analógico sin cifrado digital.
 
-![5.8 GHz experimental evidence](02-vtx-analog-video/images/5ghz-poc.jpeg)
+![Evidencia experimental de 5.8 GHz](02-vtx-analog-video/images/5ghz-poc.jpeg)
 
-**[Read the analog VTX experiment →](02-vtx-analog-video/README.md)**
+**[Consultar la investigación del VTX →](02-vtx-analog-video/README.md)**
 
-## Experimental setup
+## Equipamiento experimental
 
-| Component | Equipment / software | Purpose |
+| Componente | Equipo o software | Propósito |
 | --- | --- | --- |
-| FPV drone | BetaFPV Meteor75, ELRS 2.4 GHz, analog VTX | Test platform |
-| Radio controller | RadioMaster Pocket | ELRS control link |
-| SDR | HackRF One + PortaPack H2 | RF observation and experiments |
-| 2.4 GHz transceiver | M5Stick-C + NRF24L01 | Dedicated transceiver experiments |
-| Antenna | 5.8 GHz RHCP | Analog video reception |
-| Signal analysis | Inspectrum, SDR++ | Spectrum and IQ inspection |
-| Video demodulation | SDRangel | Analog television (ATV) reception |
-| Other tooling | hackrf_transfer, Mayhem | Capture and experimental RF configurations |
+| Dron FPV | BetaFPV Meteor75, ELRS 2.4 GHz, VTX analógico | Plataforma de pruebas |
+| Radiocontrol | RadioMaster Pocket | Enlace ExpressLRS |
+| SDR | HackRF One + PortaPack H2 | Observación y experimentación RF |
+| Transceptor 2.4 GHz | M5Stick-C + NRF24L01 | Experimentos con radio dedicado |
+| Antena | RHCP de 5.8 GHz | Recepción de vídeo |
+| Análisis de señales | Inspectrum, SDR++ | Inspección del espectro y muestras IQ |
+| Demodulación | SDRangel | Recepción de televisión analógica (ATV) |
+| Otras herramientas | hackrf_transfer, Mayhem | Capturas y configuraciones experimentales |
 
-## RF architecture
+## Arquitectura RF
 
 ```text
 RadioMaster Pocket ── ExpressLRS 2.4 GHz ──> Meteor75
                            │
                            └──> HackRF One / IQ / Inspectrum
-                                      (RF observation)
+                                      (observación RF)
 
-Meteor75 analog VTX ── 5.8 GHz (R3: 5732 MHz) ──> RHCP antenna
-                                                     │
-                                                 HackRF One
-                                                     │
-                                                  SDRangel
-                                                     │
-                                             ATV video reception
+VTX analógico Meteor75 ── 5.8 GHz (R3: 5732 MHz) ──> Antena RHCP
+                                                       │
+                                                   HackRF One
+                                                       │
+                                                    SDRangel
+                                                       │
+                                                Recepción ATV
 ```
 
-## Selected findings
+## Resultados destacados
 
-| Observation | Interpretation |
+| Observación | Interpretación |
 | --- | --- |
-| Transmitter state correlates with observed 2.4 GHz RF activity | Supports characterization of the test setup; not proof that every observed signal is ELRS |
-| ~3.968 ms measured periodicity | Approximately 252 Hz, consistent with the configured 250 Hz ELRS rate; spectrogram lines are not individually counted as packets |
-| ELRS link quality decreased in a specific RF experiment, while a tested TBS link did not show a comparable decrease | Condition-specific observation, not proof of universal protocol superiority or immunity |
-| Analog video was received through an SDR workflow | The task is RF reception and analog demodulation, **not** breaking digital encryption |
+| La actividad RF de 2.4 GHz se correlaciona con el estado del transmisor | Ayuda a caracterizar el montaje; no prueba que cualquier señal observada sea ELRS |
+| Periodicidad medida de ~3.968 ms | Aproximadamente 252 Hz, compatible con 250 Hz; las líneas del espectrograma no se cuentan individualmente como paquetes |
+| En una prueba, la calidad del enlace ELRS disminuyó y la del enlace TBS evaluado no mostró una reducción comparable | Resultado específico de esas condiciones; no demuestra superioridad ni inmunidad universal |
+| Se recibió vídeo analógico mediante un flujo SDR | Recepción y demodulación analógica, **no** ruptura de cifrado digital |
 
-## Presentation
+## Presentación
 
 **BEYOND THE GOGGLES — Pwn Or Die 2026, Quito**
 
-[View the presentation (PDF)](presentation/BEYOND_THE_GOGGLES.pdf)
+[Ver la presentación (PDF)](presentation/BEYOND_THE_GOGGLES.pdf)
 
-## Research scope and limitations
+## Alcance y limitaciones
 
-Experiments were conducted on equipment under the researcher's control. Observed behavior depends on RF conditions, antennas, distance, power, configuration and receiver design. RF activity in a band alone does not identify a protocol, and a single test does not establish a general security property.
+Las pruebas se realizaron con equipos bajo control del investigador. Los resultados dependen de las condiciones RF, antenas, distancia, potencia, configuración y diseño del receptor. La presencia de actividad en una banda no basta para identificar un protocolo, y una prueba aislada no establece propiedades generales de seguridad.
 
-The project documents RF characterization and experimental observations. It does not reproduce the ExpressLRS binding/FHSS vulnerability research published by NCC Group in 2022.
+El proyecto documenta caracterización RF y observaciones experimentales. No reproduce la investigación publicada por NCC Group en 2022 sobre vulnerabilidades del proceso de vinculación y FHSS de ExpressLRS.
 
-## Author
+## Autor
 
 **Matheo Camacho Vargas (R4Gh0st)**  
 [GitHub](https://github.com/Ray1172004) · [LinkedIn](https://www.linkedin.com/in/matheo-camacho/)
