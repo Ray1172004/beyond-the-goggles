@@ -1,114 +1,116 @@
-# 02 — Analog FPV Video: VTX at 5.8 GHz
+🌐 **Idioma / Language:** **Español** | [English](README_EN.md)
 
-[← Project overview](../README.md) · [Presentation PDF](../presentation/BEYOND_THE_GOGGLES.pdf)
+# 02 — Vídeo FPV analógico: VTX de 5.8 GHz
 
-## Objective
+[← Volver al proyecto](../README.md) · [Presentación PDF](../presentation/BEYOND_THE_GOGGLES.pdf)
 
-Document the **RF observation and reception of an analog FPV video link** using a HackRF One, a 5.8 GHz RHCP antenna and SDRangel.
+## Objetivo
 
-The purpose is to characterize a video transmitter (VTX) operating in the 5.8 GHz band and explain the analog video demodulation workflow. **This is not a digital encryption bypass**: the tested VTX transmitted analog video.
+Documentar la **observación RF y recepción de un enlace de vídeo FPV analógico** mediante HackRF One, una antena RHCP de 5.8 GHz y SDRangel.
 
-## 1. Experimental setup
+Se busca caracterizar un transmisor de vídeo (VTX) de 5.8 GHz y explicar el proceso de demodulación analógica. **No se trata de romper cifrado digital**: el VTX evaluado transmite vídeo analógico.
 
-| Component | Role |
+## 1. Equipamiento experimental
+
+| Componente | Función |
 | --- | --- |
-| BetaFPV Meteor75 | FPV drone and analog video source |
-| Analog 5.8 GHz VTX | RF video transmitter |
-| Raceband R3 | Experimental channel |
-| **5732 MHz** | R3 center frequency |
-| **25 mW** | Reported VTX power setting for this experiment |
-| 5.8 GHz RHCP antenna | Reception antenna |
-| HackRF One | SDR receiver |
-| SDR++ | Spectrum inspection |
-| SDRangel | ATV (analog television) demodulation |
+| BetaFPV Meteor75 | Dron FPV y fuente de vídeo |
+| VTX analógico 5.8 GHz | Transmisor de vídeo RF |
+| Raceband R3 | Canal experimental |
+| **5732 MHz** | Frecuencia central del canal R3 |
+| **25 mW** | Potencia configurada reportada en la prueba |
+| Antena RHCP 5.8 GHz | Antena receptora |
+| HackRF One | Receptor SDR |
+| SDR++ | Inspección del espectro |
+| SDRangel | Demodulación de televisión analógica (ATV) |
 
-The radio-control system (ExpressLRS at 2.4 GHz) is independent of the analog video system at 5.8 GHz. Observing one link does not mean decoding or compromising the other.
+El radiocontrol ExpressLRS de 2.4 GHz es independiente del enlace de vídeo analógico de 5.8 GHz. Observar uno no implica decodificar ni comprometer el otro.
 
-## 2. Signal path
+## 2. Arquitectura de recepción
 
 ```text
-Meteor75 camera
+Cámara del Meteor75
       │
       ▼
-Analog VTX (Raceband R3, 5732 MHz)
+VTX analógico (Raceband R3, 5732 MHz)
       │
       ▼
-5.8 GHz radio transmission
+Transmisión RF de 5.8 GHz
       │
       ▼
-RHCP receive antenna
+Antena receptora RHCP
       │
       ▼
 HackRF One
       │
       ▼
-SDRangel / ATV demodulator
+SDRangel / Demodulador ATV
       │
       ▼
-Analog video reception
+Recepción de vídeo analógico
 ```
 
-## 3. RF observation
+## 3. Observación RF
 
-The first stage is to tune the SDR near the experimental VTX frequency and inspect the received RF energy and occupied spectrum.
+La primera etapa consiste en sintonizar el SDR cerca de la frecuencia configurada en el VTX e inspeccionar la energía y el espectro ocupado.
 
-**Experimental reference:** Raceband **R3 — 5732 MHz**.
+**Referencia experimental:** Raceband **R3 — 5732 MHz**.
 
-![5.8 GHz VTX experiment](images/5ghz-poc.jpeg)
+![Experimento VTX de 5.8 GHz](images/5ghz-poc.jpeg)
 
-![Observed 5.8 GHz spectrum](images/espectro-5ghz.jpeg)
+![Espectro observado en 5.8 GHz](images/espectro-5ghz.jpeg)
 
-These captures document the experiment. The presence of energy near a frequency alone does not establish that a signal is a specific FPV video transmission; the transmitter configuration and demodulation result provide additional context.
+Las capturas documentan la prueba. La presencia de energía cerca de una frecuencia no identifica por sí sola una transmisión de vídeo FPV; la configuración del transmisor y el resultado de la demodulación aportan contexto adicional.
 
-## 4. Analog video demodulation with SDRangel
+## 4. Demodulación de vídeo con SDRangel
 
-The documented reception workflow was:
+El procedimiento documentado fue:
 
-1. Connect the HackRF One and the appropriate 5.8 GHz receiving antenna.
-2. Tune the SDR to the configured VTX channel (**5732 MHz**, Raceband R3).
-3. Select a sample rate and receive bandwidth appropriate to the available SDR and analog video signal.
-4. Configure SDRangel's **ATV demodulator**, including the video standard and demodulation settings suitable for the transmitted signal.
-5. Inspect and adjust reception to recover a recognizable image.
+1. Conectar el HackRF One y la antena receptora adecuada para 5.8 GHz.
+2. Sintonizar el SDR en el canal del VTX (**5732 MHz**, Raceband R3).
+3. Seleccionar una tasa de muestreo y un ancho de banda de recepción adecuados para el SDR y la señal.
+4. Configurar el **demodulador ATV de SDRangel**, incluyendo el estándar de vídeo y los ajustes compatibles con la transmisión.
+5. Inspeccionar y ajustar la recepción hasta recuperar una imagen reconocible.
 
-SDRangel was used for analog video processing. Video format and demodulator settings may require experimentation; this README does not assert a universally correct PAL/NTSC setting or an exact validated sample rate.
+El formato de vídeo y los parámetros del demodulador pueden requerir pruebas. Este documento no establece una configuración PAL/NTSC universal ni una tasa de muestreo exacta validada para todos los casos.
 
-### Why analog reception matters
+### Importancia de la recepción analógica
 
-Unlike an encrypted digital FPV video system, a conventional analog VTX does not require a digital decryption key to display its video. A suitably configured receiver can demodulate a sufficiently strong, compatible signal. Actual reception still depends on antenna polarization, distance, RF conditions, receiver bandwidth and correct demodulator configuration.
+A diferencia de un sistema de vídeo FPV digital cifrado, un VTX analógico convencional no requiere una clave de descifrado digital para mostrar sus imágenes. Un receptor compatible y correctamente configurado puede demodular una señal suficientemente fuerte. La recepción depende de la polarización de las antenas, distancia, condiciones RF, ancho de banda y ajustes de demodulación.
 
-## 5. RHCP antenna
+## 5. Antena RHCP
 
-**RHCP** means *Right-Hand Circular Polarization*. Antenna polarization is an important factor in the reception chain, especially when matching the receiving antenna to the transmitting system.
+**RHCP** significa *Right-Hand Circular Polarization* (polarización circular a derechas). La polarización influye en la recepción, especialmente al utilizar antenas compatibles con el sistema transmisor.
 
-An RHCP antenna does not increase the transmitter's output power. Its gain, radiation pattern and polarization influence the received signal and therefore the quality of the video demodulation.
+Una antena RHCP no aumenta la potencia de salida del VTX. Su ganancia, patrón de radiación y polarización afectan la señal recibida y, por tanto, la calidad de la demodulación.
 
-## 6. Security considerations
+## 6. Consideraciones de seguridad
 
-This experiment illustrates an important distinction between two FPV communication surfaces:
+Este experimento permite diferenciar dos superficies de comunicación FPV:
 
-| Surface | Experimental observation | Security interpretation |
+| Superficie | Observación experimental | Interpretación de seguridad |
 | --- | --- | --- |
-| ExpressLRS radio control, 2.4 GHz | RF timing and frequency behavior | RF observation is not equivalent to decoding control traffic |
-| Analog VTX video, 5.8 GHz | Signal reception and ATV demodulation | Compatible analog video may be viewed without digital decryption |
+| Radiocontrol ExpressLRS, 2.4 GHz | Tiempos y comportamiento en frecuencia | Observar RF no equivale a decodificar tráfico de control |
+| Vídeo VTX analógico, 5.8 GHz | Recepción de señal y demodulación ATV | El vídeo analógico compatible puede visualizarse sin descifrado digital |
 
-The experiment demonstrates an **exposure characteristic of analog video transmission**, not an exploit of the flight controller or the ExpressLRS link.
+La prueba ilustra una **característica de exposición de las transmisiones analógicas**, no una explotación del controlador de vuelo ni del enlace ExpressLRS.
 
-## 7. Limitations
+## 7. Limitaciones
 
-- The observations concern the documented equipment and RF conditions.
-- Received image quality depends on antenna, orientation, range, noise and demodulation parameters.
-- No digital encryption was broken.
-- No claim is made about digital FPV systems such as DJI or HDZero.
-- The experiment does not establish the security of every analog or digital VTX implementation.
+- Las observaciones corresponden a los equipos y condiciones documentados.
+- La calidad de imagen depende de antenas, orientación, distancia, ruido y parámetros de recepción.
+- No se rompió ningún mecanismo de cifrado digital.
+- No se establecen conclusiones sobre sistemas digitales FPV como DJI o HDZero.
+- La prueba no determina la seguridad de todos los sistemas VTX analógicos o digitales.
 
-## 8. Conclusions
+## 8. Conclusiones
 
-- The analog FPV video path was investigated independently from the 2.4 GHz radio-control link.
-- The documented VTX operated on **Raceband R3 (5732 MHz)**.
-- HackRF One and SDRangel provided an SDR-based workflow for receiving and demodulating analog video.
-- Analog reception highlights a potential confidentiality limitation of conventional unencrypted video links.
-- Antenna polarization and receiver configuration are critical practical variables.
+- Se investigó el vídeo FPV analógico de manera independiente del radiocontrol de 2.4 GHz.
+- El VTX documentado operó en **Raceband R3 (5732 MHz)**.
+- HackRF One y SDRangel proporcionaron un flujo SDR para recibir y demodular vídeo analógico.
+- La recepción analógica evidencia una posible limitación de confidencialidad en enlaces convencionales sin cifrado.
+- La polarización de antena y la configuración del receptor son variables prácticas importantes.
 
 ---
 
-[← Back to Beyond the Goggles](../README.md) · [ExpressLRS research →](../01-radiocontrol-elrs/README.md)
+[← Volver a Beyond the Goggles](../README.md) · [Investigación ExpressLRS →](../01-radiocontrol-elrs/README.md)
