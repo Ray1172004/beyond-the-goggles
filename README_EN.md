@@ -87,6 +87,14 @@ Meteor75 analog VTX ── 5.8 GHz (R3: 5732 MHz) ──> RHCP antenna
 | ELRS link quality decreased in a specific RF experiment, while a tested TBS link did not show a comparable decrease | Condition-specific observation, not proof of universal protocol superiority or immunity |
 | Analog video was received through an SDR workflow | The task is RF reception and analog demodulation, **not** breaking digital encryption |
 
+## 🎥 Full talk — Pwn Or Die 2026
+
+The **Pwn Or Die** organizers published the recording of my talk **BEYOND THE GOGGLES — The drone is more than what we see through the goggles** on YouTube, presented in Quito, Ecuador.
+
+[![Watch Beyond the Goggles on YouTube](https://img.youtube.com/vi/r7mYXfIT-SY/hqdefault.jpg)](https://youtu.be/r7mYXfIT-SY)
+
+▶️ **[Watch the full talk on YouTube](https://youtu.be/r7mYXfIT-SY)**
+
 ## Presentation
 
 **BEYOND THE GOGGLES — Pwn Or Die 2026, Quito**
