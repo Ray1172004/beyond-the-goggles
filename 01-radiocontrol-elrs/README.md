@@ -1,154 +1,156 @@
+🌐 **Idioma / Language:** **Español** | [English](README_EN.md)
+
 # 01 — Radiocontrol: ExpressLRS 2.4 GHz
 
-[← Project overview](../README.md) · [Presentation PDF](../presentation/BEYOND_THE_GOGGLES.pdf)
+[← Volver al proyecto](../README.md) · [Presentación PDF](../presentation/BEYOND_THE_GOGGLES.pdf)
 
-## Objective and scope
+## Objetivo y alcance
 
-Document the observation and characterization of an **ExpressLRS 2.4 GHz radio-control link** from the RF layer, using HackRF One and Inspectrum. The aim is to investigate RF activity, timing and frequency behavior **without decoding the payload or modifying the drone firmware**.
+Documentar la observación y caracterización RF de un **enlace de radiocontrol ExpressLRS de 2.4 GHz** con HackRF One e Inspectrum. El propósito es analizar la actividad, los tiempos y el comportamiento en frecuencia **sin decodificar el contenido de los paquetes ni modificar el firmware del dron**.
 
-This document distinguishes direct experimental observations from protocol-level context. Detecting activity at 2.4 GHz is not, by itself, proof that a signal is ExpressLRS.
+Se distingue entre observaciones directas del experimento y conocimientos generales del protocolo. Encontrar actividad en 2.4 GHz no demuestra, por sí solo, que una señal corresponda a ExpressLRS.
 
-## Equipment and software
+## Equipos y software
 
-| Item | Role |
+| Elemento | Función |
 | --- | --- |
-| BetaFPV Meteor75 | FPV test drone with ExpressLRS 2.4 GHz |
-| RadioMaster Pocket | Radio-control transmitter |
-| HackRF One | IQ sampling and spectrum observation |
-| Inspectrum | Offline temporal and spectral analysis |
-| SDR++ | Additional RF visualization |
-| M5Stick-C + NRF24L01 | Separate 2.4 GHz transceiver experiment |
-| HackRF + PortaPack H2 + Mayhem | Additional experimental RF platform |
+| BetaFPV Meteor75 | Dron de pruebas con ExpressLRS 2.4 GHz |
+| RadioMaster Pocket | Transmisor de radiocontrol |
+| HackRF One | Captura IQ y observación espectral |
+| Inspectrum | Análisis temporal y espectral de capturas |
+| SDR++ | Visualización adicional de señales |
+| M5Stick-C + NRF24L01 | Experimento independiente en 2.4 GHz |
+| HackRF + PortaPack H2 + Mayhem | Plataforma RF experimental adicional |
 
-### Photographic evidence
+### Evidencia fotográfica
 
-![RadioMaster controller](images/control-radiomaster.jpeg)
+![Control RadioMaster](images/control-radiomaster.jpeg)
 
-![Equipment used in the research](images/materiales.jpeg)
+![Equipos de la investigación](images/materiales.jpeg)
 
-## 1. Experimental architecture
+## 1. Arquitectura experimental
 
 ```text
-RadioMaster Pocket ─── 2.4 GHz ExpressLRS ───> Meteor75
+RadioMaster Pocket ─── ExpressLRS 2.4 GHz ───> Meteor75
                               │
-                         RF observation
+                        Observación RF
                               ▼
                           HackRF One
                               │
-                         IQ samples
+                         Muestras IQ
                               ▼
                           Inspectrum
                               │
-                    Timing / RF analysis
+                    Análisis temporal y RF
 ```
 
-The SDR captures a portion of the radio spectrum as IQ samples. Inspectrum is used to inspect the recorded signals offline. The SDR observation path is separate from the normal radio-control link.
+El SDR captura una porción del espectro como muestras IQ. Inspectrum permite inspeccionar la grabación posteriormente. La ruta de observación es independiente del enlace normal de control del dron.
 
-## 2. RF activity: transmitter OFF vs ON
+## 2. Actividad RF: transmisor apagado y encendido
 
-The radio transmitter was tested in two states:
+Se compararon dos estados:
 
-1. **OFF:** characteristic activity associated with the experimental transmitter was absent from the observed capture.
-2. **ON:** RF activity appeared in the observed band.
+1. **Apagado:** no se observó la actividad característica asociada al transmisor experimental en la captura.
+2. **Encendido:** apareció actividad RF en la banda observada.
 
-The comparison provides a correlation between transmitter state and recorded RF activity in the test conditions. Other emitters can occupy the same 2.4 GHz band, including Wi-Fi, Bluetooth and other RC systems.
+La comparación permitió correlacionar el estado del transmisor con la actividad registrada, dentro de las condiciones de prueba. La banda de 2.4 GHz también puede contener emisiones Wi-Fi, Bluetooth y de otros sistemas RC.
 
-![2.4 GHz experiment](images/2.4ghz-poc.jpeg)
+![Experimento de 2.4 GHz](images/2.4ghz-poc.jpeg)
 
-## 3. Packet-rate / temporal periodicity
+## 3. Tasa de paquetes y periodicidad temporal
 
-The recorded IQ signal was examined with Inspectrum. The experiment documented the following approximate values:
+La captura IQ fue examinada en Inspectrum. Se documentaron los siguientes valores aproximados:
 
-| Measurement | Value |
+| Medición | Valor |
 | --- | --- |
-| Measured period | **3.968 ms** |
-| Derived rate | **252.016 Hz** |
-| Configured ELRS packet rate | **250 Hz** |
-| Nominal interval at 250 Hz | **4 ms** |
+| Período medido | **3.968 ms** |
+| Frecuencia derivada | **252.016 Hz** |
+| Tasa ELRS configurada | **250 Hz** |
+| Intervalo nominal a 250 Hz | **4 ms** |
 
-The relation is:
+La relación matemática es:
 
 ```text
-rate (Hz) = 1 / period (seconds)
+frecuencia (Hz) = 1 / período (segundos)
 1 / 0.003968 ≈ 252.016 Hz
 1 / 0.004    = 250 Hz
 ```
 
-The measured periodicity is consistent with the configured 250 Hz mode, within the resolution and conditions of this observation.
+La periodicidad observada es coherente con el modo de 250 Hz configurado, considerando la resolución y las condiciones de medición.
 
-**Interpretation caution:** individual bright lines in a spectrogram must not automatically be counted as complete packets. This result concerns measured temporal periodicity, not decoded packet contents.
+**Precaución:** las líneas brillantes del espectrograma no deben interpretarse automáticamente como paquetes completos. El resultado corresponde a una periodicidad medida, no a paquetes decodificados.
 
-![2.4 GHz spectrum observation](images/expectro-2.4ghz.jpeg)
+![Observación espectral de 2.4 GHz](images/expectro-2.4ghz.jpeg)
 
-## 4. Frequency hopping
+## 4. Salto de frecuencia
 
-ExpressLRS uses frequency-hopping behavior. In the RF analysis, activity may appear at different frequencies over time. Relevant characteristics for investigation include:
+ExpressLRS utiliza mecanismos de salto de frecuencia. En el análisis RF puede observarse actividad en distintas posiciones del espectro a lo largo del tiempo. Las características relevantes incluyen:
 
-- Center frequency and occupied bandwidth
-- Signal duration and repetition period
-- Frequency changes across the observation window
-- Noise floor, interference and signal-to-noise conditions
+- Frecuencia central y ancho de banda ocupado.
+- Duración de las señales y período de repetición.
+- Cambios de frecuencia durante la ventana de observación.
+- Nivel de ruido, interferencias y relación señal-ruido.
 
-This experiment did not decode the payload or reconstruct a complete hopping sequence. A limited SDR capture may show only part of a wider hopping pattern.
+No se decodificó el contenido de los paquetes ni se reconstruyó una secuencia completa de saltos. Una captura SDR limitada puede mostrar únicamente parte del patrón.
 
-## 5. IQ capture and analysis
+## 5. Captura IQ y análisis
 
-Conceptual capture workflow:
+Flujo conceptual:
 
 ```text
-RF emission → HackRF One → IQ file → Inspectrum → RF characterization
+Emisión RF → HackRF One → Archivo IQ → Inspectrum → Caracterización RF
 ```
 
-Example HackRF capture command (replace placeholders with values suitable for your own setup):
+Ejemplo de comando (sustituir los parámetros según el montaje):
 
 ```bash
 hackrf_transfer -r capture.iq -f <CENTER_FREQUENCY_HZ> -s <SAMPLE_RATE_SPS>
 ```
 
-The command is a template, **not** a record of the exact parameters used in the experiment.
+Este comando es una **plantilla**, no un registro de los parámetros exactos utilizados en la prueba.
 
-## 6. NRF24L01 experiment
+## 6. Experimento con NRF24L01
 
-A separate experiment used an **M5Stick-C with an NRF24L01** to produce or observe RF activity in the 2.4 GHz band and compare a dedicated transceiver with an SDR-based platform.
+Se utilizó un **M5Stick-C con NRF24L01** en un experimento independiente para producir u observar actividad en la banda de 2.4 GHz y comparar un transceptor dedicado con una plataforma SDR.
 
-The NRF24L01 operates with discrete channel configurations, whereas an SDR provides a different level of flexibility for RF sampling and signal processing. These are different radio architectures and their effects cannot be compared solely by a single transmit-power or channel setting.
+El NRF24L01 trabaja con configuraciones de canales discretos, mientras que un SDR ofrece otras posibilidades de muestreo y procesamiento. Son arquitecturas diferentes y sus efectos no pueden compararse únicamente por potencia o canal.
 
-The experimental observation included degradation of ELRS link quality under some tested RF conditions. This is not evidence that the NRF24L01 decoded or took control of ExpressLRS.
+En determinadas condiciones se observó una degradación de la calidad del enlace ELRS. Esto **no demuestra** que el NRF24L01 haya decodificado ni tomado control de ExpressLRS.
 
 ## 7. HackRF + PortaPack / Mayhem
 
-The additional experimental platform used HackRF One with PortaPack H2 and Mayhem. Configuration concepts discussed during the research included:
+También se utilizó HackRF One con PortaPack H2 y Mayhem. Entre los conceptos de configuración examinados se encuentran:
 
-| Parameter | Conceptual role |
+| Parámetro | Función conceptual |
 | --- | --- |
-| WIDTH | Frequency span configured for the experiment |
-| TYPE | Selected signal mode |
-| HOP | Movement between configured frequency segments |
-| TX | Transmission duration |
-| SLEEP | Pause between operations |
-| JITTER | Timing variation |
-| GAIN | Gain setting |
+| WIDTH | Espacio de frecuencia configurado |
+| TYPE | Modo de señal seleccionado |
+| HOP | Movimiento entre segmentos de frecuencia |
+| TX | Duración de transmisión |
+| SLEEP | Pausa entre operaciones |
+| JITTER | Variación temporal |
+| GAIN | Ajuste de ganancia |
 
-These are descriptive concepts rather than a universal configuration recipe; exact behavior depends on the Mayhem application and version.
+Son descripciones generales, no una receta universal de configuración. Su funcionamiento exacto depende de la aplicación y versión de Mayhem.
 
-## 8. ELRS vs TBS: controlled observation
+## 8. Comparación experimental ELRS frente a TBS
 
-In a separate RF experiment, **ELRS showed a reduction in link quality (LQ)** under the tested conditions, while the tested **TBS link did not show a comparable reduction**.
+En una prueba RF independiente, **ELRS presentó una reducción de la calidad de enlace (LQ)**, mientras que el enlace **TBS evaluado no mostró una disminución comparable**.
 
-This observation must not be interpreted as universal immunity, vulnerability or superiority of either protocol. Differences in transmit power, receiver sensitivity, antennas, distance, frequency, diversity and experiment geometry can materially change results.
+No debe interpretarse como inmunidad, vulnerabilidad ni superioridad universal. La potencia, sensibilidad del receptor, antenas, distancia, frecuencia, diversidad y geometría del montaje pueden cambiar los resultados.
 
-## 9. Security context and limitations
+## 9. Contexto de seguridad y limitaciones
 
-NCC Group published research in 2022 discussing issues in the binding process and frequency-hopping sequence generation of ExpressLRS 1.x and 2.x. **This project does not reproduce that attack.** Its focus is observation and RF characterization.
+NCC Group publicó en 2022 investigaciones sobre problemas relacionados con la vinculación y la generación de secuencias de salto de frecuencia en ExpressLRS 1.x y 2.x. **Este proyecto no reproduce ese ataque**: se centra en observación y caracterización RF.
 
-### Conclusions
+### Conclusiones
 
-- HackRF and Inspectrum supported observable characterization of the experimental 2.4 GHz link.
-- The measured **3.968 ms** periodicity was consistent with the configured **250 Hz** packet rate.
-- The radio environment is shared: frequency and visible energy alone do not establish protocol identity.
-- Link-quality changes are specific to the equipment and conditions tested.
-- RF observation is a useful first stage for deeper security research, but it is not equivalent to payload decoding or exploitation.
+- HackRF e Inspectrum permitieron caracterizar aspectos observables del enlace experimental de 2.4 GHz.
+- El período de **3.968 ms** fue coherente con una tasa configurada de **250 Hz**.
+- La frecuencia y la energía observada no bastan para identificar un protocolo.
+- Los cambios en la calidad del enlace dependen del equipo y las condiciones de prueba.
+- La observación RF es una primera etapa útil para investigar seguridad, pero no equivale a decodificación ni explotación.
 
 ---
 
-[← Back to Beyond the Goggles](../README.md) · [Analog VTX research →](../02-vtx-analog-video/README.md)
+[← Volver a Beyond the Goggles](../README.md) · [Investigación VTX analógico →](../02-vtx-analog-video/README.md)
