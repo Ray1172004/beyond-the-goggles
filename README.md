@@ -54,6 +54,8 @@ The research focuses on:
 - RadioMaster Pocket
 - ExpressLRS 2.4 GHz
 
+![Hardware](01-radiocontrol-elrs/images/materiales.jpeg)
+
 ---
 
 # 2. Software
